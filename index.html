@@ -199,86 +199,12 @@
     .leaflet-control-attribution a { color: var(--muted) !important; }
     .leaflet-tile-pane { filter: brightness(0.72) saturate(0.6); }
 
-    /* ── LOGIN OVERLAY ── */
-    #loginOverlay {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--navy);
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s ease;
-    }
-    #loginOverlay.hidden { opacity: 0; pointer-events: none; }
-    .login-card {
-      width: 360px; max-width: calc(100vw - 2rem);
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--r-lg); padding: 2.5rem 2rem;
-      text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-    }
-    .login-shield {
-      width: 56px; height: 56px; margin: 0 auto 1.1rem;
-      background: var(--amber); border-radius: 14px;
-      display: flex; align-items: center; justify-content: center; font-size: 24px;
-    }
-    .login-title { font-family: var(--font-display); font-size: 2.1rem; color: var(--text); margin-bottom: 3px; }
-    .login-sub { font-size: 0.76rem; color: var(--muted); margin-bottom: 2rem; letter-spacing: 0.05em; }
-    .login-field { text-align: left; margin-bottom: 0.9rem; }
-    .login-field label { display: block; font-size: 0.68rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.09em; text-transform: uppercase; }
-    .login-field input {
-      width: 100%; padding: 10px 14px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--r); color: var(--text);
-      font-family: var(--font-body); font-size: 0.88rem;
-      outline: none; transition: border-color 0.15s;
-    }
-    .login-field input:focus { border-color: rgba(240,165,0,0.55); }
-    .login-field input::placeholder { color: rgba(255,255,255,0.18); }
-    #loginError {
-      background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.35);
-      border-radius: 8px; padding: 8px 12px;
-      font-size: 0.76rem; color: var(--risk);
-      margin-bottom: 0.8rem; text-align: left; display: none;
-    }
-    .login-btn {
-      width: 100%; padding: 11px;
-      background: var(--amber); color: #0d0d00;
-      border: none; border-radius: var(--r);
-      font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
-      cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: 0.02em;
-      margin-top: 0.5rem;
-    }
-    .login-btn:hover { background: #ffba1a; }
-    .login-btn:active { transform: scale(0.98); }
-    .login-footer { font-size: 0.65rem; color: var(--muted); margin-top: 1.6rem; letter-spacing: 0.04em; line-height: 1.6; }
-    .logout-btn {
-      background: transparent; border: 1px solid var(--border);
-      color: var(--muted); font-size: 0.7rem; font-family: var(--font-body);
-      padding: 4px 12px; border-radius: 20px; cursor: pointer; transition: all 0.15s;
-    }
-    .logout-btn:hover { border-color: rgba(244,63,94,0.4); color: var(--risk); }
+
   </style>
 </head>
 <body>
 
-<!-- ── LOGIN OVERLAY ── -->
-<div id="loginOverlay">
-  <div class="login-card">
-    <div class="login-shield">🛡</div>
-    <h1 class="login-title">Abhaya</h1>
-    <p class="login-sub">Safe Journey Engine · Women Safety Track</p>
-    <div class="login-field">
-      <label>User ID</label>
-      <input type="text" id="loginUser" placeholder="Enter your user ID"
-             autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()" />
-    </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Enter password"
-             autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" />
-    </div>
-    <div id="loginError"></div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <p class="login-footer">SRMIST · Urban Mobility &amp; Daily Commute 2026<br>Team ByteSized Army</p>
-  </div>
-</div>
+
 
 <nav>
   <div class="nav-brand">
@@ -288,7 +214,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <span class="nav-tag">Women Safety</span>
-    <button class="logout-btn" onclick="doLogout()">↩ Logout</button>
+
   </div>
 </nav>
 
@@ -412,41 +338,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 
-  /* ── LOGIN / LOGOUT ── */
-  // Credentials: User ID = abhaya | Password = SafeJourney@2026
-  const CREDS = { id: 'abhaya', pass: 'SafeJourney@2026' };
 
-  function doLogin() {
-    const uid   = document.getElementById('loginUser').value.trim();
-    const pw    = document.getElementById('loginPass').value;
-    const errEl = document.getElementById('loginError');
-    if (!uid || !pw) {
-      errEl.style.display = 'block';
-      errEl.textContent = 'Please fill in both fields.';
-      return;
-    }
-    if (uid === CREDS.id && pw === CREDS.pass) {
-      errEl.style.display = 'none';
-      const ov = document.getElementById('loginOverlay');
-      ov.classList.add('hidden');
-      setTimeout(() => { ov.style.display = 'none'; }, 420);
-    } else {
-      errEl.style.display = 'block';
-      errEl.textContent = 'Incorrect credentials — please try again.';
-      document.getElementById('loginPass').value = '';
-      document.getElementById('loginPass').focus();
-    }
-  }
-
-  function doLogout() {
-    const ov = document.getElementById('loginOverlay');
-    ov.style.display = 'flex';
-    document.getElementById('loginUser').value = '';
-    document.getElementById('loginPass').value = '';
-    document.getElementById('loginError').style.display = 'none';
-    // small delay so display:flex kicks in before removing .hidden
-    setTimeout(() => ov.classList.remove('hidden'), 10);
-  }
 
 
   // Geocoding: Nominatim (openstreetmap.org) — free, no API key
